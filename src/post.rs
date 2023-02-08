@@ -10,7 +10,9 @@ pub async fn post_requet(uid: String)->Result<models::InfoUid, reqwest::Error>{
     let resp = match client.post(url)
         .json(&data).send().await {
         Ok(resp) => resp.json::<models::InfoUid>().await,
-        Err(err) => panic!("Error: {}", err)
+        Err(err) => {
+            return Err(err);
+        }
     };
     resp
 }
@@ -32,9 +34,9 @@ pub async fn post_get_trade(uid: String)->Result<models::Trade, reqwest::Error>{
         .headers(headers).json(&body).send().await{
         Ok(resp) => resp.json::<models::Trade>().await,
         Err(err) => {
-            panic!("Error: {}", err)}
+            return Err(err);
+        }
     };
-    println!("{:#?}", resp);
     resp
 }
 

@@ -1,49 +1,60 @@
+use std::time::Duration;
+use tokio::time::sleep;
+
 use crate::{models::{self, OtherPositionRetList}, post, webhook};
 
-pub async fn follow_trade(uid: String, configs: models::Config){
+pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqwest::Error>{
     let mut history:Vec<models::OtherPositionRetList> = Vec::new();
+    println!("Start new trade");
+    let trader = match post::post_requet(uid.clone()).await{
+        Ok(trader)=>trader,
+        Err(err)=> {
+            return Err(err);
+        }
+    };
     loop {
         // add try catch
         let mut error = false;
         let trade = match post::post_get_trade(uid.clone()).await{
             Ok(trade)=> trade,
             Err(err)=> {
-                println!("{:#?}", err);
                 error = true;
                 continue;
             }
         };
         if !error && !trade.data.other_position_ret_list.is_empty(){
-            let tmp = trade.data.other_position_ret_list;
+            let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){
                 for t in tmp.iter(){
                     let mut check = true;
                     for h in history.iter(){
-                        if t == h{
+                        if t.update_time_stamp == h.update_time_stamp{
                             check = false;
                         }
                     }
                     if check{
                         //send to webhook new trade
                         history.insert(0, t.clone());
-                        webhook::send_webhook(t.clone(), configs.clone()).await;
+                        println!("add trade");
+                        webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade").await;
+                        sleep(Duration::from_secs(configs.delai)).await;
                         //add time sleep
                     }
                 }
             } 
-            for h in history.iter_mut(){
-                let mut check = false;
-                let mut tmpTrade: &OtherPositionRetList;
-                for t in tmp.iter(){
-                    if h == t {
-                        check = true;
-                        tmpTrade = h;
-                    }
+            if !history.is_empty(){
+                history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp));
+                for h in history.iter(){
+                    //close trade 
+                    println!("Close trade");
+                    webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Close Trade").await;
+                    sleep(Duration::from_secs(configs.delai)).await;
                 }
-                if !check{
-                    history.retain(|x| x == tmpTrade);
-                }
+                history.clear();
+                history = tmp.clone();
             }
+            tmp.clear();
         }
+        sleep(Duration::from_secs(3)).await;
     }
 }

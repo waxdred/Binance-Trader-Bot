@@ -4,7 +4,7 @@ use serde_json::Value;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config{
     pub webhook: String,
-    pub delai: f64,
+    pub delai: u64,
     pub url: Vec<String>,
 }
 

@@ -5,7 +5,7 @@ use crate::{post, webhook, models};
 
 pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqwest::Error>{
     let mut history:Vec<models::OtherPositionRetList> = Vec::new();
-    println!("Start new trade");
+    // println!("Start new trade");
     let trader = match post::post_requet(uid.clone()).await{
         Ok(trader)=>trader,
         Err(err)=> {
@@ -35,7 +35,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                     if check{
                         //send to webhook new trade
                         history.insert(0, t.clone());
-                        println!("add trade");
+                        // println!("add trade");
                         match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade").await{
                             Ok(_val) => (),
                             Err(err)=>{
@@ -48,7 +48,10 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 }
             } 
             if !history.is_empty(){
-                history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp));
+                let save = tmp.clone();
+                println!("tmp {:#?}", tmp);
+                history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp && y.symbol == x.symbol));
+                println!("history {:#?}", history);
                 for h in history.iter(){
                     //close trade 
                     println!("Close trade");
@@ -61,7 +64,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                     sleep(Duration::from_secs(configs.delai)).await;
                 }
                 history.clear();
-                history = tmp.clone();
+                history = save;
             }
             tmp.clear();
         }

@@ -47,12 +47,17 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
     let client: WebhookClient = WebhookClient::new(&configs.webhook);
     let field = map_webhook(configs.custom, trader.clone(), title).await;
     let mut side:String = String::new();
+    let mut date_value:String = String::new();
+    date_value = "".to_string(); 
 
     println!("{:#?}", field);
     if pos.amount <= 0.0{
         side = "🔴 Sell".to_string();
     }else{
         side = "🟢 Buy".to_string();
+    }
+    if !pos.update_time.is_empty(){
+        date_value = format!("{}/{}/{} at {}:{}:{}", pos.update_time[2], pos.update_time[1], pos.update_time[0], pos.update_time[3], pos.update_time[4], pos.update_time[5])
     }
     match client.send(|message| message
         .content("@everyone")
@@ -63,8 +68,9 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
             .description(&field["description"])
             .thumbnail(&field["thumbnail"].clone())
             .author(&field["author"], Some(field["thumbnail"].clone()), Some(field["thumbnail"].clone()))
-            .field("Entry price:", &format!("{}", pos.entry_price), false)
-            .field("Market price:", &format!("{}", pos.mark_price), false)
+            .field("Date", &date_value, false)
+            .field("Entry price:", &format!("{} $", pos.entry_price), false)
+            .field("Market price:", &format!("{} $", pos.mark_price), false)
             .field("Long ou Short:", &side, false)
             .field("Taille:", &format!("{}", pos.amount), false)
             .field("Leverage", &format!("{}", pos.leverage), false)

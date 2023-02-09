@@ -41,10 +41,10 @@ make
 ```
 
 ## Custom
--webhook: The URL for the Discord webhook.
--delai: The delay in seconds between send webhook.
--url: An array of URLs for the leadboard pages on Binance that you want to track.
--custom: An object that contains custom fields for the Discord webhook payload.
+- webhook: The URL for the Discord webhook.
+- delai: The delay in seconds between send webhook.
+- url: An array of URLs for the leadboard pages on Binance that you want to track.
+- custom: An object that contains custom fields for the Discord webhook payload.
 ```
 Example of custom
 in custom value set at "" take the value of the trader

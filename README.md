@@ -18,7 +18,7 @@ The Binance Trader Bot is a tool for keeping track of the top traders on Binance
 - Built with the high-performance Rust programming language.
 
 ## Requirements
-- Rust if not install ![Install rust](https://www.rust-lang.org/tools/install)
+- Rust if not install [Install rust](https://www.rust-lang.org/tools/install)
 - A Discord webhook set up for the channel you want to receive updates in.
 
 ## Installation

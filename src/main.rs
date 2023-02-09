@@ -28,7 +28,7 @@ async fn main(){
     let mut configs = match config::config(){
         Ok(configs)=> configs,
         Err(_error)=>{
-            println!("config.json not found: {}", _error);
+            println!("{:?}", _error);
             return;
         }
     };

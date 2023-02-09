@@ -19,6 +19,13 @@ pub fn config()-> std::io::Result<models::Config>{
     };
     config_file.read_to_string(&mut contents)?;
     let config:models::Config = from_str(&contents)?;
+    if config.webhook.is_empty(){
+        println!("Please add url of your webhook");
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::InvalidInput,
+            "Please add url of your webhook",
+        ));
+    }
     Ok(config)
 }
 

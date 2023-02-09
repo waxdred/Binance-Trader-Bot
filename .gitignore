@@ -1,3 +1,4 @@
 /target
-./Cargo.lock
-./Binance-Trader-Bot
+Cargo.lock
+Binance-Trader-Bot
+user_agents

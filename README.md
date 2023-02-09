@@ -9,7 +9,7 @@ A bot that tracks the leadboard on Binance and sends updates to a Discord channe
 - [Usage](#Usage)
 
 ## Introduction
-The Binance Trader Bot is a tool for keeping track of the top traders on Binance and sending updates to a Discord channel. This allows traders to stay informed about the performance of the top traders and make informed decisions about their own trading strategies.
+The Binance Trader Bot is a tool for keeping track of the top traders of your choose on Binance and sending updates to a Discord channel. This allows traders to stay informed about the performance of the top traders and make informed decisions about their own trading strategies.
 
 ## Features
 - Tracks the leadboard on Binance in real-time.
@@ -37,7 +37,7 @@ configure file ./config/config.json
 
 ## Usage
 ```
-make
+make run
 ```
 
 ## Custom
@@ -66,7 +66,7 @@ in custom value set at "" take the value of the trader
 }
 ```
 
-### Contributing
+## Contributing
 Contributions to this project are welcome. If you'd like to contribute, please fork the repository and make your changes. Then, open a pull request and I'll review your changes.
 
 ## License

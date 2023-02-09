@@ -1,7 +1,7 @@
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::{models::{self, OtherPositionRetList}, post, webhook};
+use crate::{post, webhook, models};
 
 pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqwest::Error>{
     let mut history:Vec<models::OtherPositionRetList> = Vec::new();
@@ -17,7 +17,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
         let mut error = false;
         let trade = match post::post_get_trade(uid.clone()).await{
             Ok(trade)=> trade,
-            Err(err)=> {
+            Err(_err)=> {
                 error = true;
                 continue;
             }
@@ -36,7 +36,12 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                         //send to webhook new trade
                         history.insert(0, t.clone());
                         println!("add trade");
-                        webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade").await;
+                        match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade").await{
+                            Ok(_val) => (),
+                            Err(err)=>{
+                                println!("{}", err);
+                            }
+                        };
                         sleep(Duration::from_secs(configs.delai)).await;
                         //add time sleep
                     }
@@ -47,7 +52,12 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 for h in history.iter(){
                     //close trade 
                     println!("Close trade");
-                    webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Close Trade").await;
+                    match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Close Trade").await{
+                        Ok(_val) => (),
+                        Err(err)=>{
+                            println!("{}", err);
+                        }
+                    };
                     sleep(Duration::from_secs(configs.delai)).await;
                 }
                 history.clear();

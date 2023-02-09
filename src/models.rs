@@ -6,8 +6,21 @@ pub struct Config{
     pub webhook: String,
     pub delai: u64,
     pub url: Vec<String>,
+    pub custom: Custom,
 }
 
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Custom {
+    pub title: String,
+    pub description: String,
+    pub username: String,
+    pub thumbnail_url: String,
+    #[serde(rename = "avatar_url")]
+    pub avatar_url: String,
+    pub author: String,
+    pub content: String,
+}
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Uid{
     #[serde(rename = "encryptedUid")]
@@ -22,6 +35,21 @@ pub struct InfoUid {
     pub message_detail: Value,
     pub data: Data,
     pub success: bool,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InfoUids {
+    pub data: InfoUid,
+    pub uid: String,
+}
+impl InfoUids {
+    pub fn new(info: InfoUid, uid: &String) -> InfoUids {
+        InfoUids {
+            data: info,
+            uid: uid.to_string(),
+        }
+    }
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

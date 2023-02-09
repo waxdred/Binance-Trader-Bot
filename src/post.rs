@@ -9,7 +9,9 @@ pub async fn post_requet(uid: String)->Result<models::InfoUid, reqwest::Error>{
     let client = reqwest::Client::new();
     let resp = match client.post(url)
         .json(&data).send().await {
-        Ok(resp) => resp.json::<models::InfoUid>().await,
+        Ok(resp) => {
+            resp.json::<models::InfoUid>().await
+        },
         Err(err) => {
             return Err(err);
         }

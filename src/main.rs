@@ -4,14 +4,20 @@ mod config;
 mod models;
 mod binance;
 mod webhook;
-use models::InfoUid;
+use models::InfoUids;
 
-async fn get_infos(url:Vec<String>)->Vec<InfoUid>{
-    let mut infos :Vec<InfoUid> = Vec::new();
+async fn get_infos(url:Vec<String>)->Vec<InfoUids>{
+    let mut infos :Vec<InfoUids> = Vec::new();
     for u in url.iter(){
         match post::post_requet(u.to_string()).await{
-            Ok(info) => infos.push(info),
-            Err(_)=>{}
+            Ok(info) => {
+                println!("{:#?}", info);
+                infos.insert(0, InfoUids::new(info, u));
+            },
+            Err(err)=>{
+                println!("{}", err);
+
+            }
         };
     }
     infos
@@ -29,10 +35,17 @@ async fn main(){
     let mut tasks = Vec::new();
     configs.get_uid();
     let infos = get_infos(configs.url.clone()).await;
-    for uid in configs.url.clone(){
+    println!("info {:?}", infos);
+    for uid in infos{
         let config = configs.clone();
         let task = tokio::spawn(async move{
-            binance::follow_trade(uid.clone(), config).await;
+            match binance::follow_trade(uid.uid.clone(), config).await{
+                Ok(_val) => (),
+                Err(err) =>{
+                    println!("{}", err);
+                }
+
+            };
         });
         tasks.push(task)
     }

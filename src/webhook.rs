@@ -43,18 +43,25 @@ async fn map_webhook(custom: models::Custom, trader:InfoUid, title: &str)-> Hash
     hook
 }
 
-pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Config, trader:InfoUid, title: &str)-> Result<(), Box<dyn Error + Send + Sync>>{
+pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Config, trader:InfoUid, title: &str, status:bool)-> Result<(), Box<dyn Error + Send + Sync>>{
     let client: WebhookClient = WebhookClient::new(&configs.webhook);
     let field = map_webhook(configs.custom, trader.clone(), title).await;
+    #[allow(unused_assignments)]
     let mut side:String = String::new();
+    #[allow(unused_assignments)]
+    let mut color:String = String::new();
     let mut date_value:String = String::new();
-    date_value = "".to_string(); 
 
     println!("{:#?}", field);
     if pos.amount <= 0.0{
         side = "🔴 Sell".to_string();
     }else{
         side = "🟢 Buy".to_string();
+    }
+    if status{
+        color = "2017814".to_string();
+    }else{
+        color = "13377311".to_string();
     }
     if !pos.update_time.is_empty(){
         date_value = format!("{}/{}/{} at {}:{}:{}", pos.update_time[2], pos.update_time[1], pos.update_time[0], pos.update_time[3], pos.update_time[4], pos.update_time[5])
@@ -63,7 +70,9 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
         .content("@everyone")
         .username(&field["username"])
         .avatar_url(&field["avatar_url"])
+
         .embed(|embed| embed
+            .color(&color)
             .title(&field["title"])
             .description(&field["description"])
             .thumbnail(&field["thumbnail"].clone())

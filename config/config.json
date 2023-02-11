@@ -10,10 +10,10 @@
     "custom" : {
         "title": "",
         "description": "",
-        "username": "Oxiris",
-        "thumbnailUrl": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
-        "avatar_url": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
-        "author": "Oxiris",
+        "username": "",
+        "thumbnailUrl": "",
+        "avatar_url": "",
+        "author": "",
         "content": ""
     },
     "whitelist":[

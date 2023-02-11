@@ -1,5 +1,5 @@
 {
-    "webhook": "<URL Webhook>",
+    "webhook": "<URL WEBHOOK>",
     "delai": 2,
     "url": [
         "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID_TRADER>",

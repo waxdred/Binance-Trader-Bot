@@ -5,10 +5,10 @@ all: build run
 
 build: ${RS_FILES}
 	cargo build
-	mv target/debug/Binance-Trader-Bot .
+	mv target/debug/binance-trader-bot .
 
 run:
-	./Binance-Trader-Bot
+	./binance-trader-bot
 
 clean:
 	rm -rf ./Cargo.lock

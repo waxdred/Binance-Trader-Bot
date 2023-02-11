@@ -41,8 +41,7 @@ make
 ```
 - Command make:
 ```
-make install
-make clean
+make build
 make run
 make clean
 make re

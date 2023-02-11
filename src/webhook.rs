@@ -76,7 +76,7 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
 
         .embed(|embed| embed
             .color(&color)
-            .title(&format!("{} {}",field["title"], pos.symbol))
+            .title(&format!("{}: {}",field["title"], pos.symbol))
             .description(&field["description"])
             .thumbnail(&field["thumbnail"].clone())
             .author(&field["author"], Some(field["thumbnail"].clone()), Some(field["thumbnail"].clone()))
@@ -85,9 +85,9 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
             .field("Order", &order, false)
             .field("Entry price:", &format!("{} $", pos.entry_price), false)
             .field("Market price:", &format!("{} $", pos.mark_price), false)
-            .field("Long ou Short:", &side, false)
-            .field("Taille:", &format!("{}", pos.amount), false)
-            .field("Leverage", &format!("{}", pos.leverage), false)
+            .field("Long or Short:", &side, false)
+            .field("Size:", &format!("{}", pos.amount), false)
+            .field("Leverage", &format!("x{}", pos.leverage), false)
             )).await{
         Ok(ret) =>ret,
         Err(err) =>{

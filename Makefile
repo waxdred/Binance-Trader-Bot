@@ -1,4 +1,4 @@
-EXEC=Binance-Trader-Bot
+EXEC=binance-trader-bot
 RS_FILES := ./src/$(wildcard *.rs)
 
 all: build run

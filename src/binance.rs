@@ -66,7 +66,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 // println!("history {:#?}", history.clone());
                 for h in history.iter(){
                     //close trade 
-                    match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Close Trade", false).await{
+                    match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Closed Trade", false).await{
                         Ok(_val) => (),
                         Err(err)=>{
                             println!("{}", err);

@@ -25,6 +25,7 @@ The Binance Trader Bot is a tool for keeping track of the top traders of your ch
 ```
 git clone https://github.com/waxdred/Binance-Trader-Bot
 cd Binance-Trader-Bot
+```
 
 configure
 ```
@@ -32,24 +33,16 @@ configure file ./config/config.json
 ```
 
 ## Usage
-Execute programme: 
+- Execute programme: 
 ```
 make
 ```
-List command make:
+- Command make:
 ```
 make install
-```
-```
 make clean
-```
-```
 make run
-```
-```
 make clean
-```
-```
 make re
 ```
 

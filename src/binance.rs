@@ -33,13 +33,26 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                     }
                     if check{
                         //send to webhook new trade
-                        history.insert(0, t.clone());
-                        match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
-                            Ok(_val) => (),
-                            Err(err)=>{
-                                println!("{}", err);
-                            }
-                        };
+                        if !configs.whitelist.is_empty() && configs.whitelist.iter().any(|x| x == &t.symbol.clone()){
+                            history.insert(0, t.clone());
+                            match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
+                                Ok(_val) => (),
+                                Err(err)=>{
+                                    println!("{}", err);
+                                }
+                            };
+                        }else if !configs.blacklist.is_empty() && configs.blacklist.contains(&t.symbol.clone()){
+                            continue;
+                        }else{
+                            history.insert(0, t.clone());
+                            println!("else ");
+                            match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
+                                Ok(_val) => (),
+                                Err(err)=>{
+                                    println!("{}", err);
+                                }
+                            };
+                        }
                         sleep(Duration::from_secs(configs.delai)).await;
                         //add time sleep
                     }
@@ -47,7 +60,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
             } 
             if !history.is_empty(){
                 let save = tmp.clone();
-                println!("tmp {:#?}", tmp.clone());
+                // println!("tmp {:#?}", tmp.clone());
                 history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp && y.symbol == x.symbol));
                 // println!("history {:#?}", history.clone());
                 for h in history.iter(){

@@ -7,6 +7,8 @@ pub struct Config{
     pub delai: u64,
     pub url: Vec<String>,
     pub custom: Custom,
+    pub whitelist: Vec<String>,
+    pub blacklist: Vec<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

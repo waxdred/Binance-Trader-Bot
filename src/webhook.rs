@@ -50,9 +50,10 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
     let mut side:String = String::new();
     #[allow(unused_assignments)]
     let mut color:String = String::new();
+    #[allow(unused_assignments)]
+    let mut order:String = String::new();
     let mut date_value:String = String::new();
 
-    println!("{:#?}", field);
     if pos.amount <= 0.0{
         side = "🔴 Sell".to_string();
     }else{
@@ -60,8 +61,10 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
     }
     if status{
         color = "2017814".to_string();
+        order = "Open".to_string();
     }else{
         color = "13377311".to_string();
+        order = "Close".to_string();
     }
     if !pos.update_time.is_empty(){
         date_value = format!("{}/{}/{} at {}:{}:{}", pos.update_time[2], pos.update_time[1], pos.update_time[0], pos.update_time[3], pos.update_time[4], pos.update_time[5])
@@ -73,11 +76,13 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
 
         .embed(|embed| embed
             .color(&color)
-            .title(&field["title"])
+            .title(&format!("{} {}",field["title"], pos.symbol))
             .description(&field["description"])
             .thumbnail(&field["thumbnail"].clone())
             .author(&field["author"], Some(field["thumbnail"].clone()), Some(field["thumbnail"].clone()))
             .field("Date", &date_value, false)
+            .field("Symbol", &pos.symbol, false)
+            .field("Order", &order, false)
             .field("Entry price:", &format!("{} $", pos.entry_price), false)
             .field("Market price:", &format!("{} $", pos.mark_price), false)
             .field("Long ou Short:", &side, false)

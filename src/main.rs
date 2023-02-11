@@ -1,4 +1,4 @@
-
+#[cfg(debug_assertions)]
 mod post;
 mod config;
 mod models;
@@ -11,12 +11,11 @@ async fn get_infos(url:Vec<String>)->Vec<InfoUids>{
     for u in url.iter(){
         match post::post_requet(u.to_string()).await{
             Ok(info) => {
-                println!("{:#?}", info);
+                // println!("{:#?}", info);
                 infos.insert(0, InfoUids::new(info, u));
             },
             Err(err)=>{
                 println!("{}", err);
-
             }
         };
     }
@@ -35,7 +34,6 @@ async fn main(){
     let mut tasks = Vec::new();
     configs.get_uid();
     let infos = get_infos(configs.url.clone()).await;
-    println!("info {:?}", infos);
     for uid in infos{
         let config = configs.clone();
         let task = tokio::spawn(async move{

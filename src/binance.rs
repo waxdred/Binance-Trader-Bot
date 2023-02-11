@@ -1,3 +1,4 @@
+#[cfg(debug_assertions)]
 use std::time::Duration;
 use tokio::time::sleep;
 
@@ -14,15 +15,13 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
     };
     loop {
         // add try catch
-        let mut error = false;
         let trade = match post::post_get_trade(uid.clone()).await{
             Ok(trade)=> trade,
             Err(_err)=> {
-                error = true;
                 continue;
             }
         };
-        if !error && !trade.data.other_position_ret_list.is_empty(){
+        if !trade.data.other_position_ret_list.is_empty(){
             let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){
                 for t in tmp.iter(){
@@ -35,7 +34,6 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                     if check{
                         //send to webhook new trade
                         history.insert(0, t.clone());
-                        // println!("add trade");
                         match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
                             Ok(_val) => (),
                             Err(err)=>{
@@ -49,12 +47,11 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
             } 
             if !history.is_empty(){
                 let save = tmp.clone();
-                println!("tmp {:#?}", tmp);
+                println!("tmp {:#?}", tmp.clone());
                 history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp && y.symbol == x.symbol));
-                println!("history {:#?}", history);
+                // println!("history {:#?}", history.clone());
                 for h in history.iter(){
                     //close trade 
-                    println!("Close trade");
                     match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Close Trade", false).await{
                         Ok(_val) => (),
                         Err(err)=>{

@@ -1,16 +1,23 @@
 {
-    "webhook": "<URL WEBHOOK>",
+    "webhook": "https://discord.com/api/webhooks/1073584850147229787/-WDBFe2yLwm6zPPHIKiMsOq_me5UIYAN826P2Z2YHZh9W8eQXTQ5OCb0FYXon-68lcMi",
     "delai": 2,
     "url": [
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID_TRADER>",
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID_TRADER>"],
+"https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=4D02F1BFA663222E874AC4F0D1EE175A",
+
+"https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=6794D4C25231C157D392A0F03688FC2E",
+
+"https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=D909E4F284E9E968CB8F888E4DE1AC74",
+
+"https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=B76D80355A416EDD30F1C3F8E2F051C7",
+
+"https://www.binance.com/en/futures-activity/leaderboard/user?encryptedUid=BBFE38FA1FA9F14BE8533E0508DC8468"],
     "custom" : {
         "title": "",
         "description": "",
-        "username": "",
-        "thumbnailUrl": "",
-        "avatar_url": "",
-        "author": "",
+        "username": "Oxiris",
+        "thumbnailUrl": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
+        "avatar_url": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
+        "author": "Oxiris",
         "content": ""
     }
 }

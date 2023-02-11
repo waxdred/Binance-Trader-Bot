@@ -54,15 +54,20 @@ make re
 - delai: The delay in seconds between send webhook.
 - url: An array of URLs for the leadboard pages on Binance that you want to track.
 - custom: An object that contains custom fields for the Discord webhook payload.
+- whitelist: array of symbol you want trade  if whitelist is set bot will show you only the symbol from whitelist
+- blacklist: array of symbol you don't want trade
 ```
 Example of custom
 in custom value set at "" take the value of the trader
 {
-    "webhook": "entry url of your webhook",
+    "webhook": "<URL WEBHOOK>",
     "delai": 2,
     "url": [
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=03160F2ACF9A714FC1204EC5B322AB34",
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=AEB91A40173730B4AC9C6FCE9891956A"],
+           "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID TRADER>",
+            "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID TRADER>",
+            "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID TRADER>",
+            "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<ID TRADER>",
+            "https://www.binance.com/en/futures-activity/leaderboard/user?encryptedUid=<ID TRADER>"],
     "custom" : {
         "title": "",
         "description": "",
@@ -71,7 +76,12 @@ in custom value set at "" take the value of the trader
         "avatar_url": "",
         "author": "",
         "content": ""
-    }
+    },
+    "whitelist":[],
+    "blacklist":[
+        "BNBUSDT",
+        "CROUSDT"
+    ]
 }
 ```
 

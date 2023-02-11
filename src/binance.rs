@@ -33,19 +33,20 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                     }
                     if check{
                         //send to webhook new trade
-                        if !configs.whitelist.is_empty() && configs.whitelist.iter().any(|x| x == &t.symbol.clone()){
-                            history.insert(0, t.clone());
-                            match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
-                                Ok(_val) => (),
-                                Err(err)=>{
-                                    println!("{}", err);
-                                }
-                            };
+                        if !configs.whitelist.is_empty() {
+                            if configs.whitelist.iter().any(|x| x == &t.symbol.clone()){
+                                history.insert(0, t.clone());
+                                match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
+                                   Ok(_val) => (),
+                                   Err(err)=>{
+                                       println!("{}", err);
+                                   }
+                                };
+                            }
                         }else if !configs.blacklist.is_empty() && configs.blacklist.contains(&t.symbol.clone()){
                             continue;
                         }else{
                             history.insert(0, t.clone());
-                            println!("else ");
                             match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
                                 Ok(_val) => (),
                                 Err(err)=>{

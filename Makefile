@@ -1,28 +1,20 @@
 EXEC=Binance-Trader-Bot
+RS_FILES := ./src/$(wildcard *.rs)
 
-all: check run
+all: build run
 
-check:
-	@if [ -f $(EXEC) ]; then \
-		echo "$(EXEC) found"; \
-		make run; \
-	else \
-		echo "$(EXEC) not found"; \
-		make install; \
-	fi
-
-install: clean
+build: ${RS_FILES}
 	cargo build
 	mv target/debug/Binance-Trader-Bot .
-
-build:
-	cargo build
 
 run:
 	./Binance-Trader-Bot
 
 clean:
+	rm -rf ./Cargo.lock
 	cargo clean
 	rm -rf $(EXEC)
 
 re: clean all
+
+.PHONY: all

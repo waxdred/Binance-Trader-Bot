@@ -1,12 +1,17 @@
 use reqwest::header::HeaderMap;
 use serde_json::json;
 use crate::models;
+use crate::proxy;
 extern crate fake_useragent;
 
 pub async fn post_requet(uid: String)->Result<models::InfoUid, reqwest::Error>{
+    let list_proxy = proxy::Proxy::new().await;
+    let ip = list_proxy.random();
+    let conn = format!("http://{}:{}", ip.ip, ip.port);
+    let proxy = reqwest::Proxy::http(conn)?;
     let url = "https://www.binance.com/bapi/futures/v2/public/future/leaderboard/getOtherLeaderboardBaseInfo";
     let data = models::Uid{encrypted_uid: uid};
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder().proxy(proxy).build()?;
     let resp = match client.post(url)
         .json(&data).send().await {
         Ok(resp) => {
@@ -20,8 +25,12 @@ pub async fn post_requet(uid: String)->Result<models::InfoUid, reqwest::Error>{
 }
 
 pub async fn post_get_trade(uid: String)->Result<models::Trade, reqwest::Error>{
+    let list_proxy = proxy::Proxy::new().await;
+    let ip = list_proxy.random();
+    let conn = format!("http://{}:{}", ip.ip, ip.port);
+    let proxy = reqwest::Proxy::http(conn)?;
     let url = "https://www.binance.com/bapi/futures/v1/public/future/leaderboard/getOtherPosition";
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder().proxy(proxy).build()?;
     let body = json!({
         "encryptedUid": uid,
         "tradeType": "PERPETUAL"

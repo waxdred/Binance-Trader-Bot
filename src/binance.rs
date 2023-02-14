@@ -2,14 +2,14 @@
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::{post, webhook, models::{self, OtherPositionRetListBool}};
+use crate::{post, webhook, models};
 
 pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqwest::Error>{
-    let mut history:Vec<models::OtherPositionRetListBool> = Vec::new();
+    let mut history:Vec<models::OtherPositionRetList> = Vec::new();
+    // println!("Start new trade");
     let trader = match post::post_requet(uid.clone()).await{
         Ok(trader)=>trader,
         Err(err)=> {
-            println!("{:#?}", err);
             return Err(err);
         }
     };
@@ -21,14 +21,13 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 continue;
             }
         };
-        println!("trade :{:#?}", trade);
         if !trade.data.other_position_ret_list.is_empty(){
             let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){
                 for t in tmp.iter(){
                     let mut check = true;
                     for h in history.iter(){
-                        if t.update_time_stamp == h.data.update_time_stamp{
+                        if t.update_time_stamp == h.update_time_stamp{
                             check = false;
                         }
                     }
@@ -36,40 +35,24 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                         //send to webhook new trade
                         if !configs.whitelist.is_empty() {
                             if configs.whitelist.iter().any(|x| x == &t.symbol.clone()){
-                                let data = OtherPositionRetListBool::new(t.clone(), true);
-                                if t.pnl > -0.10 && t.pnl < 0.10{
-                                    history.insert(0, data.clone());
-                                }else{
-                                    data.clone().change_trade(false);
-                                    history.insert(0, data.clone());
-                                }
-                                if data.trade{
-                                    match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
-                                       Ok(_val) => (),
-                                       Err(err)=>{
-                                           println!("{}", err);
-                                       }
-                                    };
-                                }
+                                history.insert(0, t.clone());
+                                match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
+                                   Ok(_val) => (),
+                                   Err(err)=>{
+                                       println!("{}", err);
+                                   }
+                                };
                             }
                         }else if !configs.blacklist.is_empty() && configs.blacklist.contains(&t.symbol.clone()){
                             continue;
                         }else{
-                            let data = OtherPositionRetListBool::new(t.clone(), true);
-                            if t.pnl > -0.10 && t.pnl < 0.10{
-                                history.insert(0, data.clone());
-                            }else{
-                                data.clone().change_trade(false);
-                                history.insert(0, data.clone());
-                            }
-                            if data.trade{
-                                match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
-                                    Ok(_val) => (),
-                                    Err(err)=>{
-                                        println!("{}", err);
-                                    }
-                                };
-                            }
+                            history.insert(0, t.clone());
+                            match webhook::send_webhook(t.clone(), configs.clone(),trader.clone(), "New Trade", true).await{
+                                Ok(_val) => (),
+                                Err(err)=>{
+                                    println!("{}", err);
+                                }
+                            };
                         }
                         sleep(Duration::from_secs(configs.delai)).await;
                         //add time sleep
@@ -77,26 +60,25 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 }
             } 
             if !history.is_empty(){
-                let save = history.clone();
-                history.retain(|x| !tmp.iter()
-                               .any(|y| y.update_time_stamp == x.data.update_time_stamp && y.symbol == x.data.symbol));
+                let save = tmp.clone();
+                // println!("tmp {:#?}", tmp.clone());
+                history.retain(|x| !tmp.iter().any(|y| y.update_time_stamp == x.update_time_stamp && y.symbol == x.symbol));
+                // println!("history {:#?}", history.clone());
                 for h in history.iter(){
                     //close trade 
-                    if h.trade{
-                        match webhook::send_webhook(h.data.clone(), configs.clone(),trader.clone(), "Closed Trade", false).await{
-                            Ok(_val) => (),
-                            Err(err)=>{
-                                println!("{}", err);
-                            }
-                        };
-                        sleep(Duration::from_secs(configs.delai)).await;
-                    }
+                    match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Closed Trade", false).await{
+                        Ok(_val) => (),
+                        Err(err)=>{
+                            println!("{}", err);
+                        }
+                    };
+                    sleep(Duration::from_secs(configs.delai)).await;
                 }
                 history.clear();
                 history = save;
             }
             tmp.clear();
         }
-        sleep(Duration::from_secs(10)).await;
+        sleep(Duration::from_secs(3)).await;
     }
 }

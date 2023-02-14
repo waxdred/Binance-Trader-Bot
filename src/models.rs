@@ -104,21 +104,3 @@ pub struct OtherPositionRetList {
     pub trade_before: bool,
     pub leverage: i64,
 }
-
-#[derive(Default, Debug, Clone, PartialEq)]
-pub struct OtherPositionRetListBool {
-    pub data: OtherPositionRetList,
-    pub trade: bool,
-}
-
-impl OtherPositionRetListBool {
-    pub fn new(other:OtherPositionRetList, b:bool)->OtherPositionRetListBool{
-        OtherPositionRetListBool{
-            data: other,
-            trade: b,
-        }
-    }
-    pub fn change_trade(&mut self, trade: bool){
-        self.trade = trade;
-    }
-}

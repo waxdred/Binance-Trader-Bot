@@ -6,7 +6,6 @@ use crate::{post, webhook, models};
 
 pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqwest::Error>{
     let mut history:Vec<models::OtherPositionRetList> = Vec::new();
-    // println!("Start new trade");
     let trader = match post::post_requet(uid.clone()).await{
         Ok(trader)=>trader,
         Err(err)=> {
@@ -21,6 +20,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 continue;
             }
         };
+        println!("{:#?}", trade);
         if !trade.data.other_position_ret_list.is_empty(){
             let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){

@@ -88,6 +88,7 @@ pub async fn send_webhook(pos: models::OtherPositionRetList, configs: models::Co
             .field("Long or Short:", &side, false)
             .field("Size:", &format!("{}", pos.amount), false)
             .field("Leverage", &format!("x{}", pos.leverage), false)
+            .field("Pnl", &format!("{}", pos.pnl), false)
             )).await{
         Ok(ret) =>ret,
         Err(err) =>{

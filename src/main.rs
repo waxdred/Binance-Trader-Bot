@@ -39,7 +39,6 @@ async fn main(){
     for uid in infos{
         let config = configs.clone();
         let task = tokio::spawn(async move{
-            println!("new task");
             match binance::follow_trade(uid.uid.clone(), config).await{
                 Ok(_val) => (),
                 Err(err) =>{

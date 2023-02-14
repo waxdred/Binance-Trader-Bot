@@ -21,7 +21,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 continue;
             }
         };
-        // println!("trade :{:#?}", trade);
+        println!("trade :{:#?}", trade);
         if !trade.data.other_position_ret_list.is_empty(){
             let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){

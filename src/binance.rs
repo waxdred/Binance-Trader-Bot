@@ -15,7 +15,6 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
     };
     loop {
         // add try catch
-        println!("Start new trade");
         let trade = match post::post_get_trade(uid.clone()).await{
             Ok(trade)=> trade,
             Err(_err)=> {
@@ -79,10 +78,8 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
             } 
             if !history.is_empty(){
                 let save = history.clone();
-                // println!("tmp {:#?}", tmp.clone());
                 history.retain(|x| !tmp.iter()
                                .any(|y| y.update_time_stamp == x.data.update_time_stamp && y.symbol == x.data.symbol));
-                // println!("history {:#?}", history.clone());
                 for h in history.iter(){
                     //close trade 
                     if h.trade{
@@ -100,6 +97,6 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
             }
             tmp.clear();
         }
-        sleep(Duration::from_secs(3)).await;
+        sleep(Duration::from_secs(10)).await;
     }
 }

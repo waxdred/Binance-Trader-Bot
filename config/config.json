@@ -1,16 +1,16 @@
 {
-    "webhook": "https://discord.com/api/webhooks/1059203248831078500/XT7TUZaTi8avcBxFz2H0hOoMApVyNTmVMRYAH9a2ihl6YMPLe-6Jz_TlPTqxQu_uQJLc",
+    "webhook": "<WEBHOOB>",
     "delai": 2,
     "url": [
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=B76D80355A416EDD30F1C3F8E2F051C7",
-        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=BBFE38FA1FA9F14BE8533E0508DC8468"],
+        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<UID>",
+        "https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=<UID>"],
     "custom": {
         "title": "",
         "description": "",
         "username": "Oxiris",
-        "thumbnailUrl": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
-        "avatar_url": "https://oxiris-capital.com/wp-content/uploads/2023/01/IMG-20230114-WA0010-300x227.jpg",
-        "author": "Oxiris",
+        "thumbnailUrl": "",
+        "avatar_url": "",
+        "author": "",
         "content": ""
     },
     "whitelist":[

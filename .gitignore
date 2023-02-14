@@ -1,3 +1,4 @@
 /target
 Cargo.lock
 Binance-Trader-Bot
+./config/config.json

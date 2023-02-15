@@ -1,4 +1,5 @@
 #[cfg(debug_assertions)]
+use chrono::Local;
 use std::time::Duration;
 use tokio::time::sleep;
 
@@ -13,6 +14,8 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
         }
     };
     loop {
+        let current_time = Local::now();
+        let time_str = current_time.format("%Y-%m-%d %H:%M:%S").to_string();
         // add try catch
         let trade = match post::post_get_trade(uid.clone()).await{
             Ok(trade)=> trade,
@@ -20,7 +23,7 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 continue;
             }
         };
-        println!("{:#?}", trade);
+        println!("{}\n{:#?}",time_str, trade);
         if !trade.data.other_position_ret_list.is_empty(){
             let mut tmp = trade.data.other_position_ret_list;
             if tmp.len() > history.len(){

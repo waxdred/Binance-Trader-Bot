@@ -5,6 +5,7 @@ all: build run
 
 build: ${RS_FILES}
 	cargo build
+	rm -rf ${EXEC}
 	mv target/debug/binance-trader-bot .
 
 run:

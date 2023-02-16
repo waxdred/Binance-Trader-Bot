@@ -77,10 +77,6 @@ in custom value set at "" take the value of the trader
         "content": ""
     },
     "whitelist":[
-        "CROUSDT"
-        "CROUSDT"
-        "CROUSDT"
-        "CROUSDT"
     ],
     "blacklist":[
         "BNBUSDT",

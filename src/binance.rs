@@ -76,7 +76,6 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                             continue;
                         }
                     };
-                    println!("{:#?}", price);
                     close.set_price(&price.price);
                     match webhook::send_webhook(close, configs.clone(),trader.clone(), "Closed Trade", false).await{
                         Ok(_val) => (),

@@ -69,7 +69,16 @@ pub async fn follow_trade(uid: String, configs: models::Config)->Result<(), reqw
                 // println!("history {:#?}", history.clone());
                 for h in history.iter(){
                     //close trade 
-                    match webhook::send_webhook(h.clone(), configs.clone(),trader.clone(), "Closed Trade", false).await{
+                    let mut close = h.to_owned();
+                    let price = match post::current_price("BTCUSDT").await{
+                        Ok(price)=> price,
+                        Err(_err)=> {
+                            continue;
+                        }
+                    };
+                    println!("{:#?}", price);
+                    close.set_price(&price.price);
+                    match webhook::send_webhook(close, configs.clone(),trader.clone(), "Closed Trade", false).await{
                         Ok(_val) => (),
                         Err(err)=>{
                             println!("{}", err);

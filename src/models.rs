@@ -13,6 +13,14 @@ pub struct Config{
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct Symbol {
+    pub symbol: String,
+    pub price: String,
+}
+
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Custom {
     pub title: String,
     pub description: String,
@@ -104,3 +112,14 @@ pub struct OtherPositionRetList {
     pub trade_before: bool,
     pub leverage: i64,
 }
+
+impl OtherPositionRetList {
+    pub fn set_price(&mut self, price: &str)->&mut Self{
+        let p = price.parse::<f64>().unwrap();
+        self.mark_price = p;
+        self.entry_price = p;
+        self
+    }
+    
+}
+

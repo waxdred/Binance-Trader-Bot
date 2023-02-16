@@ -1,8 +1,30 @@
+use std::fmt::format;
+
 use reqwest::header::HeaderMap;
 use serde_json::json;
 use crate::models;
 use crate::proxy;
 extern crate fake_useragent;
+// https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
+//
+
+pub async fn current_price(symbol:&str)->Result<models::Symbol, reqwest::Error>{
+    let list_proxy = proxy::Proxy::new().await;
+    let ip = list_proxy.random();
+    let conn = format!("http://{}:{}", ip.ip, ip.port);
+    let proxy = reqwest::Proxy::http(conn)?;
+    let url = format!("https://api.binance.com/api/v3/ticker/price?symbol={}", symbol);
+    let client = reqwest::Client::builder().proxy(proxy).build()?;
+    let resp = match client.get(url).send().await {
+        Ok(resp) => {
+            resp.json::<models::Symbol>().await
+        },
+        Err(err) => {
+            return Err(err);
+        }
+    };
+    resp
+}
 
 pub async fn post_requet(uid: String)->Result<models::InfoUid, reqwest::Error>{
     let list_proxy = proxy::Proxy::new().await;

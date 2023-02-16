@@ -36,6 +36,7 @@ async fn main(){
     let mut tasks = Vec::new();
     configs.get_uid();
     let infos = get_infos(configs.url.clone()).await;
+
     for uid in infos{
         let config = configs.clone();
         let task = tokio::spawn(async move{
